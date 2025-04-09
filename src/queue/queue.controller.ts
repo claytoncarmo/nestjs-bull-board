@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Put } from '@nestjs/common';
+import { Body, Controller, Get, Put, Query } from '@nestjs/common';
 import { QueueService } from './queue.service';
+import { Job } from 'bullmq';
 
 @Controller('queue')
 export class QueueController {
@@ -9,13 +10,13 @@ export class QueueController {
   ) { }
 
   @Put()
-  putInQueue(@Body() data: any): void {
-    this.queueService.putInQueue(data);
+  putInQueue(@Body() data: any): Promise<Job> {
+    return this.queueService.putInQueue(data);
   }
 
   @Get()
-  getNext(): any {
-    return this.queueService.getNext();
+  getJob(@Query('id') jobId: string): Promise<Job> {
+    return this.queueService.getJob(jobId);
   }
 
 }
