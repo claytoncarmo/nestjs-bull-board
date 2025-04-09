@@ -1,6 +1,6 @@
 import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable, Logger } from '@nestjs/common';
-import { Job, Queue, Worker } from 'bullmq';
+import { Job, Queue } from 'bullmq';
 
 @Injectable()
 export class QueueService {
@@ -12,8 +12,8 @@ export class QueueService {
   ) { }
 
   async putInQueue(data: any): Promise<Job> {
-    const job = await this.queue.add('test-job', data, { delay: 5000 });
-    this.logger.log(`Added job id ${job.id} to queue: ${JSON.stringify(data)}`);
+    const job = await this.queue.add('test-job', data, { delay: data?.delay || 0 });
+    this.logger.log(`Added job ${job.id} to queue: ${JSON.stringify(data)}`);
     return job;
   }
 
